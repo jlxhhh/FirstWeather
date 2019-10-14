@@ -1,0 +1,16 @@
+{
+"data":{
+	"yesterday":
+		{"date":"1日星期二","high":"高温 30℃","fx":"南风","low":"低温 18℃","fl":"<![CDATA[3-4级]]>","type":"多云"},
+	"city":"大兴",
+	"forecast":
+		[
+			{"date":"2日星期三","high":"高温 30℃","fengli":"<![CDATA[<3级]]>","low":"低温 16℃","fengxiang":"南风","type":"晴"},
+			{"date":"3日星期四","high":"高温 30℃","fengli":"<![CDATA[<3级]]>","low":"低温 12℃","fengxiang":"东南风","type":"多云"},
+			{"date":"4日星期五","high":"高温 13℃","fengli":"<![CDATA[3-4级]]>","low":"低温 9℃","fengxiang":"东北风","type":"小雨"},
+			{"date":"5日星期六","high":"高温 19℃","fengli":"<![CDATA[<3级]]>","low":"低温 9℃","fengxiang":"北风","type":"晴"},
+			{"date":"6日星期天","high":"高温 21℃","fengli":"<![CDATA[<3级]]>","low":"低温 9℃","fengxiang":"西南风","type":"阴"}
+		],
+	"ganmao":"各项气象条件适宜，发生感冒机率较低。但请避免长期处于空调房间中，以防感冒。","wendu":"25"},
+"status":1000,"desc":"OK"
+}

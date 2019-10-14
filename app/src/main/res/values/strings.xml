@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">MiniWeather</string>
+    <string name="weather">%1$d</string>
+    <string name="status1">晴转多云（实时）</string>
+    <string name="status2">晴转多云</string>
+</resources>
