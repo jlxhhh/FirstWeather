@@ -14,8 +14,8 @@ public class Test {
         //System.out.println(res);
         try {
 
-            WeatherDate weatherDate = WeatherDate.getCurrentDate();
-            System.out.println(weatherDate.getSolor_date());
+            String response = HttpUtil.sendHttpRequest("hhh");
+            System.out.println(response);
 
         } catch (Exception e) {
             e.printStackTrace();

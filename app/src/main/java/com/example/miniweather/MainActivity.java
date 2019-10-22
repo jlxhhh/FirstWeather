@@ -3,10 +3,14 @@ package com.example.miniweather;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.miniweather.Presenter.WeatherPresenter;
 
 import java.util.HashMap;
 import java.util.Timer;
@@ -58,10 +62,39 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         timer.schedule(timerTask,0,30*60*1000);
-
-
-
+        TextView changeCity = findViewById(R.id.changeCity);
+        changeCity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,CityActivity.class);
+                startActivityForResult(intent,1);
+            }
+        });
     }
+    @Override
+    protected  void onActivityResult(int requestCode, int resultCode, Intent intent){
+        super.onActivityResult(requestCode,resultCode,intent);
+        switch (requestCode){
+            case 1:
+                if(resultCode == RESULT_OK){
+                    final String city = intent.getStringExtra("city");
+                    Log.i("qqq",city);
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            weatherStatus = WeatherStatus.getCurrentWeather1(city);
+                            updateWeatherStatusView();
+                        }
+                    }).start();
+                    SharedPreferences.Editor editor = getSharedPreferences("PreData",MODE_PRIVATE).edit();
+                    editor.putString("city",city);
+                    editor.apply();
+                }
+                break;
+                default:
+        }
+    }
+
     protected void setWeatherDate(){
         //另起一个线程来获取时间
         new Thread(new Runnable() {
@@ -90,10 +123,17 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
 
 //                weatherStatus = WeatherStatus.getCurrentWeather2(MainActivity.this);
-//              //  Log.i("test",weatherStatus.getStatus());
+//                Log.i("test",weatherStatus.getLowAndHighTemperature());
 //             //   System.out.println(weatherStatus.getStatus());
-//                if(weatherStatus == null)
-                weatherStatus = WeatherStatus.getCurrentWeather1();
+//                if(weatherStatus == null) {
+//
+//                    weatherStatus = WeatherStatus.getCurrentWeather1();
+//                }
+
+                SharedPreferences sharedPreferences = getSharedPreferences("PreData",MODE_PRIVATE);
+                String city = sharedPreferences.getString("city","大兴 101011100");
+              //  Log.i("test",city);
+                weatherStatus = WeatherStatus.getCurrentWeather1(city);
                 updateWeatherStatusView();
             }
         }).start();
@@ -119,6 +159,10 @@ public class MainActivity extends AppCompatActivity {
 
                 TextView realTimeView = (TextView)findViewById(R.id.realTime);
                 realTimeView.setText(weatherStatus.getRealTime());
+
+                TextView cityView = findViewById(R.id.city);
+                cityView.setText(weatherStatus.getCity().split(" ")[0]);
+                Log.i("xxx",weatherStatus.getCity().split(" ")[0]);
             }
         });
     }
@@ -130,5 +174,6 @@ public class MainActivity extends AppCompatActivity {
             return map.get(iconName);
 
     }
+
 
 }

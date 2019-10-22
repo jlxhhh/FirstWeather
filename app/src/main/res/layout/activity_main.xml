@@ -13,7 +13,7 @@
         android:scaleType="centerCrop"
         android:src="@drawable/bg2"
         tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp" />
+        tools:layout_editor_absoluteY="-47dp" />
 
     <TextView
         android:id="@+id/weatherDate"
@@ -119,6 +119,32 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintVertical_bias="0.8"
+        />
+    <TextView
+    android:id="@+id/city"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:text="大兴"
+        android:textColor="@android:color/white"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintVertical_bias="0.10"
+        android:textSize="30sp"
+    />
+
+    <TextView
+        android:id="@+id/changeCity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" [切换城市]"
+        android:textSize="20sp"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/city"
+        app:layout_constraintLeft_toRightOf="@+id/city"
+
+        app:layout_constraintVertical_bias="0.10"
         />
 
 

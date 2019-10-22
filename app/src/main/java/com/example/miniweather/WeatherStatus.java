@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import android.util.Log;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -29,7 +30,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class WeatherStatus {
-    private static WeatherStatus weatherStatus;
+    private static  WeatherStatus weatherStatus;
     final private static String TAG = "WeatherStatus";
     private String temperature = "";
     private String status = "";
@@ -37,6 +38,7 @@ public class WeatherStatus {
     private String lowAndHighTemperature = "";
     private String icon = "";
     private String realTime ="";
+    private String city = "";
     public static HashMap<String,String> map = new HashMap<String,String>(){{
         put("晴","sunny");
         put("小雨","rainy");
@@ -47,6 +49,13 @@ public class WeatherStatus {
         put("多云","cloudy");
     }
     };
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
     public String getRealTime() {
         return realTime;
     }
@@ -94,13 +103,14 @@ public class WeatherStatus {
     public void setWind(String wind) {
         this.wind = wind;
     }
+
     public static WeatherStatus getCurrentWeather2(final Context context){
         return  new WeatherStatus().getCurrentWeather2NotStatic(context);
     }
 
 
     public  WeatherStatus getCurrentWeather2NotStatic(final Context context){
-        weatherStatus =  new WeatherStatus();
+         weatherStatus =  new WeatherStatus();
         //初始化
         HeConfig.init("HE1910071425251130","2da1708c928a425bbe6f4e5c40bc7cf9");
         HeConfig.switchToFreeServerNode();
@@ -118,17 +128,20 @@ public class WeatherStatus {
                 weatherStatus.setWind(now.getNow().getWind_dir());
                 weatherStatus.setIcon(getIcon(now.getNow().getCond_txt()));
                 weatherStatus.setRealTime(now.getNow().getCond_txt()+"(实时)");
-
+                Log.i(TAG,weatherStatus.getStatus());
             }
         });
+
+        Log.i(TAG,"hhh");
         Log.i(TAG,weatherStatus.getRealTime());
         HeWeather.getWeatherForecast(context, "朝阳,北京", Lang.CHINESE_SIMPLIFIED, Unit.METRIC, new HeWeather.OnResultWeatherForecastBeanListener() {
             @Override
             public void onError(Throwable throwable) {
+                Log.i(TAG,"error");
             }
             @Override
             public void onSuccess(Forecast forecast) {
-             //   Log.i(TAG,new Gson().toJson(forecast.getDaily_forecast()));
+                Log.i(TAG,new Gson().toJson(forecast.getDaily_forecast()));
                String max = forecast.getDaily_forecast().get(0).getTmp_max();
                String min = forecast.getDaily_forecast().get(0).getTmp_min();
                weatherStatus.setLowAndHighTemperature(min+"℃"+" ~ "+max+"℃");
@@ -136,31 +149,47 @@ public class WeatherStatus {
         });
       //  Log.i(TAG,weatherStatus.toString());
       //  Log.i(TAG,weatherStatus.getLowAndHighTemperature());
+        try {
+            Thread.sleep(2000);
+        }catch(Exception e){
+
+        }
         return weatherStatus;
     }
 
-    public static WeatherStatus getCurrentWeather1(){
+    public static WeatherStatus getCurrentWeather1(String city){
+        Log.i("test",city);
         //中华万年历
         Log.i("MainActivity","获取天气状况");
-        WeatherStatus weatherStatus = null;
+        weatherStatus = new WeatherStatus();
+        weatherStatus.setCity(city);
         //中国万年历天气
-        String address = "http://wthrcdn.etouch.cn/weather_mini?citykey=101011100";
+       // String address ="http://wthrcdn.etouch.cn/weather_mini?citykey=101011100";
+        String address = "http://wthrcdn.etouch.cn/weather_mini?citykey=" + city.split(" ")[1];
 
+        Log.d("hhh",address);
         try {
-            Log.d("MainActivity","1");
-            OkHttpClient client = new OkHttpClient();
-            Request request = new Request.Builder()
-                    .url(address)
-                    .build();
-          //  Log.d("MainActivity","2");
-            Response response = client.newCall(request).execute();
-          //  Log.d("MainActivity","3");
-            String responseData = response.body().string();
+            Log.d("www","1");
+//            ============================
+//            OkHttpClient client = new OkHttpClient();
+//            Request request = new Request.Builder()
+//                    .url(address)
+//                    .build();
+//            Log.d("www","2");
+//          //  Log.d("MainActivity","2");
+//            Response response = client.newCall(request).execute();
+//          //  Log.d("MainActivity","3");
+//            Log.d("www","3");
+//            String responseData = response.body().string();
+//            Log.d("www","4");
+//================================================================
+              String responseData = HttpUtil.sendHttpRequest(address);
+            Log.i("hhhhh",responseData);
 
             weatherStatus =  parseJSONWithJSONObject(responseData);
          //   Log.d("MainActivity","4");
         } catch (Exception e) {
-            Log.d("MianActivity",e.getMessage());
+            Log.d("hhhhhh",e.getMessage());
             weatherStatus = null;
             e.printStackTrace();
         }
@@ -174,13 +203,14 @@ public class WeatherStatus {
             weatherStatus.setLowAndHighTemperature("25~30℃");
             weatherStatus.setIcon("sunny");
             weatherStatus.setRealTime("晴天(非实时)");
+            weatherStatus.setCity("大兴 101011100");
         }
         Log.i("MainActivity","获取天气状况完成");
         return weatherStatus;
     }
     public static WeatherStatus parseJSONWithJSONObject(String jsonData){
         Log.i("MainActivity","开始解析天气json");
-        WeatherStatus weatherStatus = null;
+     //   WeatherStatus weatherStatus = null;
         try {
             System.out.println(jsonData);
             JSONObject jsonObject = new JSONObject(jsonData);
@@ -197,7 +227,7 @@ public class WeatherStatus {
 //            Log.d("MainActivity",lowAndHighTemperature);
 //            Log.d("MainActivity",icon);
 //            Log.d("MainActivity",realTime);
-            weatherStatus = new WeatherStatus();
+        //    weatherStatus = new WeatherStatus();
             weatherStatus.setTemperature(temerature);
             weatherStatus.setStatus(status);
             weatherStatus.setWind(wind);
