@@ -1,19 +1,40 @@
 package com.example.miniweather.Bean;
 
 public class WeatherBean {
-    private String temperature = "";
-    private String status = "";
-    private String wind = "";
-    private String lowAndHighTemperature = "";
-    private String icon = "";
-    private String realTime ="";
+    private String date;
+    private String tmp_max;
+    private String tmp_min;
+    private String status;
 
-    public String getTemperature() {
-        return temperature;
+    public WeatherBean(String date, String tmp_max, String tmp_min, String status) {
+        this.date = date;
+        this.tmp_max = tmp_max;
+        this.tmp_min = tmp_min;
+        this.status = status;
     }
 
-    public void setTemperature(String temperature) {
-        this.temperature = temperature;
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getTmp_max() {
+        return tmp_max;
+    }
+
+    public void setTmp_max(String tmp_max) {
+        this.tmp_max = tmp_max;
+    }
+
+    public String getTmp_min() {
+        return tmp_min;
+    }
+
+    public void setTmp_min(String tmp_min) {
+        this.tmp_min = tmp_min;
     }
 
     public String getStatus() {
@@ -22,37 +43,5 @@ public class WeatherBean {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public String getWind() {
-        return wind;
-    }
-
-    public void setWind(String wind) {
-        this.wind = wind;
-    }
-
-    public String getLowAndHighTemperature() {
-        return lowAndHighTemperature;
-    }
-
-    public void setLowAndHighTemperature(String lowAndHighTemperature) {
-        this.lowAndHighTemperature = lowAndHighTemperature;
-    }
-
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
-    }
-
-    public String getRealTime() {
-        return realTime;
-    }
-
-    public void setRealTime(String realTime) {
-        this.realTime = realTime;
     }
 }

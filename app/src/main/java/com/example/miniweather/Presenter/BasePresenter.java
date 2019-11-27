@@ -1,6 +1,8 @@
 package com.example.miniweather.Presenter;
 
+import com.example.miniweather.Bean.ForecastBean;
 import com.example.miniweather.Model.BaseModel;
+import com.example.miniweather.Model.WeatherModel;
 import com.example.miniweather.View.BaseView;
 
 public abstract class BasePresenter<View extends BaseView,Model extends BaseModel> {
@@ -16,11 +18,14 @@ public abstract class BasePresenter<View extends BaseView,Model extends BaseMode
         this.view = null;
     }
     public void attachModel(Model model){
-        this.model = model;
+
+            this.model = model;
     }
     public void detachModel(){
+
         this.model = null;
     }
+
 
 
 }

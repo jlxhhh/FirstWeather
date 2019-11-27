@@ -10,13 +10,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.miniweather.Presenter.WeatherPresenter;
+import com.example.miniweather.View.ChooseAreaActivity;
 
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity_S extends AppCompatActivity {
 
     protected WeatherStatus weatherStatus;
     protected WeatherDate weatherDate;
@@ -32,23 +32,21 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Intent intent = new Intent();
-
 //        new Thread(new Runnable() {
 //            @Override
 //            public void run() {
 //                Weather weather = Weather.getCurrentWeather();
-//                Log.d("MainActivity","#########");
-//                Log.d("MainActivity",weather.getTemperature());
-//                Log.d("MainActivity",weather.getStatus());
-//                Log.d("MainActivity",weather.getWind());
-//                Log.d("MainActivity",weather.getLowAndHighTemperature());
-//                Log.d("MainActivity",weather.getIcon());
-//                Log.d("MainActivity",weather.getRealTime());
+//                Log.d("MainActivity_S","#########");
+//                Log.d("MainActivity_S",weather.getTemperature());
+//                Log.d("MainActivity_S",weather.getStatus());
+//                Log.d("MainActivity_S",weather.getWind());
+//                Log.d("MainActivity_S",weather.getLowAndHighTemperature());
+//                Log.d("MainActivity_S",weather.getIcon());
+//                Log.d("MainActivity_S",weather.getRealTime());
 //                WeatherDate time = WeatherDate.getCurrentDate();
-//                Log.d("MainActivity",time.getSolor_date());
-//                Log.d("MainActivity",WeatherDate.getWeek());
-//                Log.d("MainActivity",time.getLunar_data());
+//                Log.d("MainActivity_S",time.getSolor_date());
+//                Log.d("MainActivity_S",WeatherDate.getWeek());
+//                Log.d("MainActivity_S",time.getLunar_data());
 //            }
 //        }).start();
 
@@ -66,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         changeCity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,CityActivity.class);
+                Intent intent = new Intent(MainActivity_S.this, ChooseAreaActivity.class);
                 startActivityForResult(intent,1);
             }
         });
@@ -122,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
 
-//                weatherStatus = WeatherStatus.getCurrentWeather2(MainActivity.this);
+//                weatherStatus = WeatherStatus.getCurrentWeather2(MainActivity_S.this);
 //                Log.i("test",weatherStatus.getLowAndHighTemperature());
 //             //   System.out.println(weatherStatus.getStatus());
 //                if(weatherStatus == null) {
@@ -168,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
     }
     protected int getIconId(String iconName){
         if(map.get(iconName) == null){
-            Log.w("MainActivity","不能找到天气图标2");
+            Log.w("MainActivity_S","不能找到天气图标2");
             return R.mipmap.sunny;
         }else
             return map.get(iconName);

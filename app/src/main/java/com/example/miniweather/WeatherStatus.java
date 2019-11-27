@@ -1,33 +1,21 @@
 package com.example.miniweather;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import android.util.Log;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+
 import java.util.HashMap;
-import java.util.List;
 
 import android.content.Context;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
-import interfaces.heweather.com.interfacesmodule.bean.Code;
 import interfaces.heweather.com.interfacesmodule.bean.Lang;
 import interfaces.heweather.com.interfacesmodule.bean.Unit;
-import interfaces.heweather.com.interfacesmodule.bean.air.forecast.AirForecast;
-import interfaces.heweather.com.interfacesmodule.bean.air.now.AirNow;
 import interfaces.heweather.com.interfacesmodule.bean.weather.forecast.Forecast;
 import interfaces.heweather.com.interfacesmodule.bean.weather.now.Now;
-import interfaces.heweather.com.interfacesmodule.bean.weather.now.NowBase;
 import interfaces.heweather.com.interfacesmodule.view.HeConfig;
 import interfaces.heweather.com.interfacesmodule.view.HeWeather;
-import interfaces.heweather.com.interfacesmodule.view.HeWeather.OnResultAirNowBeansListener;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 public class WeatherStatus {
     private static  WeatherStatus weatherStatus;
@@ -160,7 +148,7 @@ public class WeatherStatus {
     public static WeatherStatus getCurrentWeather1(String city){
         Log.i("test",city);
         //中华万年历
-        Log.i("MainActivity","获取天气状况");
+        Log.i("MainActivity_S","获取天气状况");
         weatherStatus = new WeatherStatus();
         weatherStatus.setCity(city);
         //中国万年历天气
@@ -176,18 +164,18 @@ public class WeatherStatus {
 //                    .url(address)
 //                    .build();
 //            Log.d("www","2");
-//          //  Log.d("MainActivity","2");
+//          //  Log.d("MainActivity_S","2");
 //            Response response = client.newCall(request).execute();
-//          //  Log.d("MainActivity","3");
+//          //  Log.d("MainActivity_S","3");
 //            Log.d("www","3");
 //            String responseData = response.body().string();
 //            Log.d("www","4");
 //================================================================
-              String responseData = HttpUtil.sendHttpRequest(address);
+              String responseData = HttpUtil1.sendHttpRequest(address);
             Log.i("hhhhh",responseData);
 
             weatherStatus =  parseJSONWithJSONObject(responseData);
-         //   Log.d("MainActivity","4");
+         //   Log.d("MainActivity_S","4");
         } catch (Exception e) {
             Log.d("hhhhhh",e.getMessage());
             weatherStatus = null;
@@ -195,7 +183,7 @@ public class WeatherStatus {
         }
         //获取数据失败
         if(weatherStatus == null){
-            Log.w("MainActivity","无法联网，获取实时数据失败");
+            Log.w("MainActivity_S","无法联网，获取实时数据失败");
             weatherStatus = new WeatherStatus();
             weatherStatus.setTemperature("28");
             weatherStatus.setStatus("晴天");
@@ -205,11 +193,11 @@ public class WeatherStatus {
             weatherStatus.setRealTime("晴天(非实时)");
             weatherStatus.setCity("大兴 101011100");
         }
-        Log.i("MainActivity","获取天气状况完成");
+        Log.i("MainActivity_S","获取天气状况完成");
         return weatherStatus;
     }
     public static WeatherStatus parseJSONWithJSONObject(String jsonData){
-        Log.i("MainActivity","开始解析天气json");
+        Log.i("MainActivity_S","开始解析天气json");
      //   WeatherStatus weatherStatus = null;
         try {
             System.out.println(jsonData);
@@ -221,12 +209,12 @@ public class WeatherStatus {
             String lowAndHighTemperature = data.getJSONArray("forecast").getJSONObject(0).getString("low").substring(2)+" ~"+data.getJSONArray("forecast").getJSONObject(0).getString("high").substring(2);
             String icon = getIcon(status);
             String realTime = status + "(实时)";
-//            Log.d("MainActivity",temerature);
-//            Log.d("MainActivity",status);
-//            Log.d("MainActivity",wind);
-//            Log.d("MainActivity",lowAndHighTemperature);
-//            Log.d("MainActivity",icon);
-//            Log.d("MainActivity",realTime);
+//            Log.d("MainActivity_S",temerature);
+//            Log.d("MainActivity_S",status);
+//            Log.d("MainActivity_S",wind);
+//            Log.d("MainActivity_S",lowAndHighTemperature);
+//            Log.d("MainActivity_S",icon);
+//            Log.d("MainActivity_S",realTime);
         //    weatherStatus = new WeatherStatus();
             weatherStatus.setTemperature(temerature);
             weatherStatus.setStatus(status);
@@ -237,15 +225,15 @@ public class WeatherStatus {
         } catch (JSONException e) {
             weatherStatus = null;
             e.printStackTrace();
-            Log.w("MainActivity","解析天气Json失败");
+            Log.w("MainActivity_S","解析天气Json失败");
         }
-        Log.i("MainActivity","解析天气json完成");
+        Log.i("MainActivity_S","解析天气json完成");
         return weatherStatus;
     }
     public static String getIcon(String status){
         if(map.get(status) == null) {
 
-            Log.w("MainActivity","不能找到天气图标2");
+            Log.w("MainActivity_S","不能找到天气图标2");
             return "sunny";
         }
         else

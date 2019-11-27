@@ -73,12 +73,12 @@ public class  WeatherDate{
             //处理无法联网情况，此时并不会报异常，因此只能手动处理
             if(dateL == 0) {
                 date = new Date(System.currentTimeMillis());
-                Log.w("MainActivity","无法联网获取网络时间，获取本地系统时间");
+                Log.w("MainActivity_S","无法联网获取网络时间，获取本地系统时间");
             }
             else {
                 sdf.setTimeZone(TimeZone.getTimeZone("GMT+8"));
                 date = new Date(dateL);
-                Log.i("MainActivity","获取网络时间");
+                Log.i("MainActivity_S","获取网络时间");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -90,7 +90,7 @@ public class  WeatherDate{
                 connection.disconnect();
         }
 
-        Log.i("MainActivity","时间已获取，解析时间");
+        Log.i("MainActivity_S","时间已获取，解析时间");
       //  Log.w("test",date.toString());
 
 
@@ -115,11 +115,11 @@ public class  WeatherDate{
         weatherDate.setWeek(solor_date[3]);
         weatherDate.setLunar_data(monthToChinese[lunar.lunarMonth-1]+"月"+dayToChinese[lunar.lunarDay-1]);
 
-        Log.i("MainActivity",weatherDate.getSolor_date());
+        Log.i("MainActivity_S",weatherDate.getSolor_date());
         System.out.println(weatherDate.getSolor_date());
         System.out.println(weatherDate.getWeek());
         System.out.println(weatherDate.getLunar_data());
-        Log.i("MainActivity","时间解析完成");
+        Log.i("MainActivity_S","时间解析完成");
         return weatherDate;
     }
 

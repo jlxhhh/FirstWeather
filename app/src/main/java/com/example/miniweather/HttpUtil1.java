@@ -13,7 +13,7 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSession;
 
-public class HttpUtil {
+public class HttpUtil1 {
 
     public static String sendHttpRequest(String address){
         HttpURLConnection connection = null;
