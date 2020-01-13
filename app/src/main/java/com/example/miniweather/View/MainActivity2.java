@@ -1,8 +1,10 @@
 package com.example.miniweather.View;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -14,6 +16,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 
@@ -38,6 +43,8 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+
 
 public class MainActivity2 extends AppCompatActivity implements BaseView {
     private WeatherPresenter presenter;
@@ -59,6 +66,7 @@ public class MainActivity2 extends AppCompatActivity implements BaseView {
     TextView forecastStatus;
     TextView forecastTmpMax;
     TextView forecastTmpMin;
+    ConstraintLayout listLayout;
     SwipeRefreshLayout swipeRefreshLayout;
 
 
@@ -69,24 +77,7 @@ public class MainActivity2 extends AppCompatActivity implements BaseView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        mLocationClient = new LocationClient(getApplicationContext());
-//        //声明LocationClient类
-//        mLocationClient.registerLocationListener(myListener);
-//        LocationClientOption option = new LocationClientOption();
-//
-//        option.setIsNeedAddress(true);
-//        option.setScanSpan(1000);
-//        option.setOpenGps(true);
-////        option.setOnceLocation(true);
-//        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
-//        mLocationClient.setLocOption(option);
-//        mLocationClient.start();
-//
-//
-//        BDLocation bdLocation = mLocationClient.getLastKnownLocation();
-//        System.out.println("+++++++++++++++++++24342+++++++++");
-//        System.out.println(bdLocation);
-
+        initRequestLocation();
 
         setContentView(R.layout.activity_main2);
         System.out.println("????");
@@ -123,55 +114,72 @@ public class MainActivity2 extends AppCompatActivity implements BaseView {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
-//                BDLocation bdLocation = mLocationClient.getLastKnownLocation();
-//
-//
-//                Log.i("ASDF", "+++++++++++++++++++1111111111111+++++++++");
-//               // Log.i("ASDF", getCityCode(bdLocation.getDistrict()));
-//                Toast.makeText(MainActivity2.this, "刷新", Toast.LENGTH_LONG).show();//刷新时要做的事情
-//                request("CN101011100");
-//                swipeRefreshLayout.setRefreshing(false);//刷新完成
-
+                String weather;
+                try {
+                    BDLocation bdLocation = mLocationClient.getLastKnownLocation();
+                    weather = getCityCode(bdLocation.getDistrict());
+                    Log.i("ASDF", getCityCode(bdLocation.getDistrict()));
+                } catch (Exception e) {
+                    weather = weatherId;
+                }
+                Toast.makeText(MainActivity2.this, "刷新", Toast.LENGTH_LONG).show();//刷新时要做的事情
+                request(weather);
+                swipeRefreshLayout.setRefreshing(false);//刷新完成
 
             }
         });
     }
 
-    public void requestLocation() {
 
+    public void initRequestLocation() {
 
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PERMISSION_GRANTED) {// 没有权限，申请权限。
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 200);
+
+            mLocationClient = new LocationClient(getApplicationContext());
+            //声明LocationClient类
+            mLocationClient.registerLocationListener(myListener);
+            LocationClientOption option = new LocationClientOption();
+            option.setIsNeedAddress(true);
+            option.setScanSpan(10 * 1000);
+            option.setOpenGps(true);
+//        option.setOnceLocation(true);
+            option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
+            mLocationClient.setLocOption(option);
+            mLocationClient.start();
+        }
     }
 
-//    public String getCityCode(String city) {
-//        String address = "https://search.heweather.net/find?location=" + city + "&key=cc33b9a52d6e48de852477798980b76e";
-//        final boolean[] requestEnd = new boolean[1];
-//        final String []cityCode = new String[1];
-//        while (!requestEnd[0]) {
-//            HttpUtil.sendHttpRequest(address, new Callback() {
-//                @Override
-//                public void onFailure(Call call, IOException e) {
-//                }
-//                @Override
-//                public void onResponse(Call call, Response response) throws IOException {
-//                    String responseBody = response.body().string();
-//                    JSONObject HeWeatherKey = null;
-//                    try {
-//                        HeWeatherKey = new JSONObject(responseBody);
-//                        JSONArray HeWeatherValue = HeWeatherKey.getJSONArray("HeWeather6");
-//                        JSONArray basic = HeWeatherValue.getJSONObject(0).getJSONArray("basic");
-//                        JSONObject cid = basic.getJSONObject(0);
-//                        cityCode[0] = cid.getString("cid");
-//
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//                    requestEnd[0] = true;
-//                }
-//            });
-//        }
-//        return cityCode[0];
-//    }
+    public String getCityCode(String city) {
+        String address = "https://search.heweather.net/find?location=" + city + "&key=cc33b9a52d6e48de852477798980b76e";
+        final boolean[] requestEnd = new boolean[1];
+        final String[] cityCode = new String[1];
+        while (!requestEnd[0]) {
+            HttpUtil.sendHttpRequest(address, new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    String responseBody = response.body().string();
+                    JSONObject HeWeatherKey = null;
+                    try {
+                        HeWeatherKey = new JSONObject(responseBody);
+                        JSONArray HeWeatherValue = HeWeatherKey.getJSONArray("HeWeather6");
+                        JSONArray basic = HeWeatherValue.getJSONObject(0).getJSONArray("basic");
+                        JSONObject cid = basic.getJSONObject(0);
+                        cityCode[0] = cid.getString("cid");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    requestEnd[0] = true;
+                }
+            });
+        }
+        return cityCode[0];
+    }
 
 
     public void request(String addressId) {
@@ -179,12 +187,16 @@ public class MainActivity2 extends AppCompatActivity implements BaseView {
         address[1] = "https://free-api.heweather.net/s6/weather/forecast?location=" + addressId + "&key=cc33b9a52d6e48de852477798980b76e";
         presenter.setModelAndPresenter();
         presenter.request(address);
+        SharedPreferences.Editor editor = getSharedPreferences("PreData", MODE_PRIVATE).edit();
+        editor.putString("weatherId", addressId);
+        editor.apply();
     }
 
     public void initRequest() {
         address = new String[2];
         SharedPreferences sharedPreferences = getSharedPreferences("PreData", MODE_PRIVATE);
         weatherId = sharedPreferences.getString("weatherId", "CN101011100");
+
         request(weatherId);
 
     }
@@ -267,6 +279,12 @@ public class MainActivity2 extends AppCompatActivity implements BaseView {
         forecastTmpMax.setText(forecastBean.getDay6().getTmp_max());
         forecastTmpMin.setText(forecastBean.getDay6().getTmp_min());
 
+        listLayout = findViewById(R.id.list_layout);
+        String nowStatus = forecastBean.getNowBean().getStatus();
+        if(nowStatus.equals("晴"))
+            listLayout.setBackground(this.getResources().getDrawable(R.drawable.bg2));
+        else if(nowStatus.equals("阴"))
+            listLayout.setBackground(this.getResources().getDrawable(R.drawable.bg3));
 
     }
 
