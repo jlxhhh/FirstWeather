@@ -124,54 +124,54 @@ public class MainActivity2 extends AppCompatActivity implements BaseView {
             @Override
             public void onRefresh() {
 
-                BDLocation bdLocation = mLocationClient.getLastKnownLocation();
-
-
-                Log.i("ASDF", "+++++++++++++++++++1111111111111+++++++++");
-               // Log.i("ASDF", getCityCode(bdLocation.getDistrict()));
-                Toast.makeText(MainActivity2.this, "刷新", Toast.LENGTH_LONG).show();//刷新时要做的事情
-                request("CN101011100");
-                swipeRefreshLayout.setRefreshing(false);//刷新完成
+//                BDLocation bdLocation = mLocationClient.getLastKnownLocation();
+//
+//
+//                Log.i("ASDF", "+++++++++++++++++++1111111111111+++++++++");
+//               // Log.i("ASDF", getCityCode(bdLocation.getDistrict()));
+//                Toast.makeText(MainActivity2.this, "刷新", Toast.LENGTH_LONG).show();//刷新时要做的事情
+//                request("CN101011100");
+//                swipeRefreshLayout.setRefreshing(false);//刷新完成
 
 
             }
         });
     }
 
-    public void requestLocation(){
+    public void requestLocation() {
 
 
     }
 
-    public String getCityCode(String city) {
-        String address = "https://search.heweather.net/find?location=" + city + "&key=cc33b9a52d6e48de852477798980b76e";
-        final boolean[] requestEnd = new boolean[1];
-        final String []cityCode = new String[1];
-        while (!requestEnd[0]) {
-            HttpUtil.sendHttpRequest(address, new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-                }
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    String responseBody = response.body().string();
-                    JSONObject HeWeatherKey = null;
-                    try {
-                        HeWeatherKey = new JSONObject(responseBody);
-                        JSONArray HeWeatherValue = HeWeatherKey.getJSONArray("HeWeather6");
-                        JSONArray basic = HeWeatherValue.getJSONObject(0).getJSONArray("basic");
-                        JSONObject cid = basic.getJSONObject(0);
-                        cityCode[0] = cid.getString("cid");
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    requestEnd[0] = true;
-                }
-            });
-        }
-        return cityCode[0];
-    }
+//    public String getCityCode(String city) {
+//        String address = "https://search.heweather.net/find?location=" + city + "&key=cc33b9a52d6e48de852477798980b76e";
+//        final boolean[] requestEnd = new boolean[1];
+//        final String []cityCode = new String[1];
+//        while (!requestEnd[0]) {
+//            HttpUtil.sendHttpRequest(address, new Callback() {
+//                @Override
+//                public void onFailure(Call call, IOException e) {
+//                }
+//                @Override
+//                public void onResponse(Call call, Response response) throws IOException {
+//                    String responseBody = response.body().string();
+//                    JSONObject HeWeatherKey = null;
+//                    try {
+//                        HeWeatherKey = new JSONObject(responseBody);
+//                        JSONArray HeWeatherValue = HeWeatherKey.getJSONArray("HeWeather6");
+//                        JSONArray basic = HeWeatherValue.getJSONObject(0).getJSONArray("basic");
+//                        JSONObject cid = basic.getJSONObject(0);
+//                        cityCode[0] = cid.getString("cid");
+//
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                    requestEnd[0] = true;
+//                }
+//            });
+//        }
+//        return cityCode[0];
+//    }
 
 
     public void request(String addressId) {
@@ -191,7 +191,7 @@ public class MainActivity2 extends AppCompatActivity implements BaseView {
 
     public void show(ForecastBean forecastBean) {
         System.out.println("===========hhhhhhhhhhhhh===============");
-        Log.i("LLLL",forecastBean.getNowBean().getLocation());
+        Log.i("LLLL", forecastBean.getNowBean().getLocation());
         location = findViewById(R.id.title_location);
         location.setText(forecastBean.getNowBean().getLocation());
 
@@ -299,21 +299,17 @@ public class MainActivity2 extends AppCompatActivity implements BaseView {
                 if (resultCode == RESULT_OK) {
                     final String weatherId1 = intent.getStringExtra("county");
                     System.out.println("0000000000000000000000000000000000000000000");
-                    Log.i("WEA",weatherId);
+                    Log.i("WEA", weatherId);
                     System.out.print(weatherId1);
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Looper.prepare();
-                            weatherId = weatherId1;
-                            Log.i("LLLL",weatherId);
-                            request(weatherId);
-                            SharedPreferences.Editor editor = getSharedPreferences("PreData", MODE_PRIVATE).edit();
-                            editor.putString("weatherId", weatherId);
-                            editor.apply();
-                            System.out.println("weatehrweathersadassdasasddassddasd");
-                        }
-                    }).start();
+
+                    weatherId = weatherId1;
+                    Log.i("LLLL", weatherId);
+                    request(weatherId);
+
+                    SharedPreferences.Editor editor = getSharedPreferences("PreData", MODE_PRIVATE).edit();
+                    editor.putString("weatherId", weatherId);
+                    editor.apply();
+                    System.out.println("weatehrweathersadassdasasddassddasd");
 
                 }
                 break;
