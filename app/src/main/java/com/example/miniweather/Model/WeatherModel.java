@@ -24,7 +24,7 @@ import okhttp3.Response;
 public class WeatherModel implements BaseModel{
     WeatherPresenter presenter;
     Handler handler = new Handler() {
-        ForecastBean forecastBean = new ForecastBean() ;
+
         public void handleMessage(Message msg) {
 
            presenter.show((ForecastBean)msg.obj);

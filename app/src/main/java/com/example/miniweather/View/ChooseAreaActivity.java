@@ -70,6 +70,7 @@ public class ChooseAreaActivity extends AppCompatActivity {
                     selectedCounty = countyList.get(position);
                     Intent intent = new Intent();
                     intent.putExtra("county",selectedCounty.getWeatherId());
+                    System.out.println(selectedCounty.getWeatherId());
                     System.out.println("77777777777777777777777777777777777777");
                     System.out.println(selectedCounty.getWeatherId());
                     setResult(RESULT_OK,intent);
