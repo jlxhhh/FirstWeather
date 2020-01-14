@@ -64,6 +64,7 @@ public class MainActivity2 extends AppCompatActivity implements BaseView {
     LinearLayout forecast4;
     LinearLayout forecast5;
     LinearLayout forecast6;
+    LinearLayout forecast7;
     TextView forecastTmp;
     TextView forecastStatus;
     TextView forecastTmpMax;
@@ -124,7 +125,6 @@ public class MainActivity2 extends AppCompatActivity implements BaseView {
             public void onRefresh() {
                 String weather;
                 try {
-
 //                    BDLocation bdLocation = mLocationClient.getLastKnownLocation();
 //                    Log.i("ASDF", myListener.getDistrict());
                     String district = myListener.getDistrict();
@@ -298,8 +298,20 @@ public class MainActivity2 extends AppCompatActivity implements BaseView {
         forecastTmpMax.setText(forecastBean.getDay6().getTmp_max());
         forecastTmpMin.setText(forecastBean.getDay6().getTmp_min());
 
+        forecast7 = findViewById(R.id.forecast7);
+        forecastTmp = forecast7.findViewById(R.id.forecast_tmp);
+        forecastStatus = forecast7.findViewById(R.id.forecast_status);
+        forecastTmpMax = forecast7.findViewById(R.id.forecast_tmp_max);
+        forecastTmpMin = forecast7.findViewById(R.id.forecast_tmp_min);
+        forecastTmp.setText(forecastBean.getDay7().getDate());
+        forecastStatus.setText(forecastBean.getDay7().getStatus());
+        forecastTmpMax.setText(forecastBean.getDay7().getTmp_max());
+        forecastTmpMin.setText(forecastBean.getDay7().getTmp_min());
+
         listLayout = findViewById(R.id.list_layout);
+
         String nowStatus = forecastBean.getNowBean().getStatus();
+
         if(nowStatus.equals("晴"))
             listLayout.setBackground(this.getResources().getDrawable(R.drawable.sunny));
         else if(nowStatus.equals("阴"))

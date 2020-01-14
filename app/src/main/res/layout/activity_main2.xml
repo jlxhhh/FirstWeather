@@ -143,6 +143,9 @@
                 <include
                     android:id="@+id/forecast6"
                     layout="@layout/forecast" />
+                <include
+                    android:id="@+id/forecast7"
+                    layout="@layout/forecast" />
             </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
