@@ -76,8 +76,13 @@ public class MainActivity2 extends AppCompatActivity implements BaseView {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         initRequestLocation();
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         setContentView(R.layout.activity_main2);
         System.out.println("????");
@@ -116,13 +121,15 @@ public class MainActivity2 extends AppCompatActivity implements BaseView {
             public void onRefresh() {
                 String weather;
                 try {
+
                     BDLocation bdLocation = mLocationClient.getLastKnownLocation();
+//                    Log.i("ASDF", myListener.getDistrict());
                     weather = getCityCode(bdLocation.getDistrict());
-                    Log.i("ASDF", getCityCode(bdLocation.getDistrict()));
+
                 } catch (Exception e) {
                     weather = weatherId;
                 }
-                Toast.makeText(MainActivity2.this, "刷新", Toast.LENGTH_LONG).show();//刷新时要做的事情
+                Toast.makeText(MainActivity2.this, "更新天气", Toast.LENGTH_LONG).show();//刷新时要做的事情
                 request(weather);
                 swipeRefreshLayout.setRefreshing(false);//刷新完成
 
@@ -142,9 +149,9 @@ public class MainActivity2 extends AppCompatActivity implements BaseView {
             mLocationClient.registerLocationListener(myListener);
             LocationClientOption option = new LocationClientOption();
             option.setIsNeedAddress(true);
-            option.setScanSpan(10 * 1000);
+            option.setScanSpan(3 * 1000);
             option.setOpenGps(true);
-//        option.setOnceLocation(true);
+//            option.setOnceLocation(true);
             option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
             mLocationClient.setLocOption(option);
             mLocationClient.start();
@@ -152,6 +159,8 @@ public class MainActivity2 extends AppCompatActivity implements BaseView {
     }
 
     public String getCityCode(String city) {
+        System.out.println("000000000000000");
+        System.out.println(city);
         String address = "https://search.heweather.net/find?location=" + city + "&key=cc33b9a52d6e48de852477798980b76e";
         final boolean[] requestEnd = new boolean[1];
         final String[] cityCode = new String[1];
@@ -167,6 +176,8 @@ public class MainActivity2 extends AppCompatActivity implements BaseView {
                     JSONObject HeWeatherKey = null;
                     try {
                         HeWeatherKey = new JSONObject(responseBody);
+                        System.out.println("||||||||||||||||||||||||||||||||");
+                        System.out.println(responseBody);
                         JSONArray HeWeatherValue = HeWeatherKey.getJSONArray("HeWeather6");
                         JSONArray basic = HeWeatherValue.getJSONObject(0).getJSONArray("basic");
                         JSONObject cid = basic.getJSONObject(0);
@@ -282,10 +293,15 @@ public class MainActivity2 extends AppCompatActivity implements BaseView {
         listLayout = findViewById(R.id.list_layout);
         String nowStatus = forecastBean.getNowBean().getStatus();
         if(nowStatus.equals("晴"))
-            listLayout.setBackground(this.getResources().getDrawable(R.drawable.bg2));
+            listLayout.setBackground(this.getResources().getDrawable(R.drawable.sunny));
         else if(nowStatus.equals("阴"))
             listLayout.setBackground(this.getResources().getDrawable(R.drawable.bg3));
-
+        else if(nowStatus.equals("小雨")||nowStatus.equals("中雨")||nowStatus.equals("大雨"))
+            listLayout.setBackground(this.getResources().getDrawable(R.drawable.rainy));
+        else if(nowStatus.equals("多云"))
+            listLayout.setBackground(this.getResources().getDrawable(R.drawable.cloudy));
+        else
+            listLayout.setBackground(this.getResources().getDrawable(R.drawable.bg3));
     }
 
     public void setPresenter(WeatherPresenter presenter) {
