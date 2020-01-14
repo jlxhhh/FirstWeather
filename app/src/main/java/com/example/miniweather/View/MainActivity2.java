@@ -1,6 +1,7 @@
 package com.example.miniweather.View;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -29,6 +30,7 @@ import com.baidu.location.LocationClientOption;
 import com.example.miniweather.Bean.ForecastBean;
 import com.example.miniweather.Presenter.WeatherPresenter;
 import com.example.miniweather.R;
+import com.example.miniweather.Service.LocationService;
 import com.example.miniweather.Util.HttpUtil;
 import com.example.miniweather.Util.MyLocationListener;
 import com.google.gson.JsonObject;
@@ -68,21 +70,22 @@ public class MainActivity2 extends AppCompatActivity implements BaseView {
     TextView forecastTmpMin;
     ConstraintLayout listLayout;
     SwipeRefreshLayout swipeRefreshLayout;
-
+    private LocationService locationService;
 
     public LocationClient mLocationClient = null;
-    private MyLocationListener myListener = new MyLocationListener();
+    public MyLocationListener  myListener = new MyLocationListener();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initRequestLocation();
-
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        initRequestLocation();
+//
+//        try {
+//            Thread.sleep(1000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
 
         setContentView(R.layout.activity_main2);
         System.out.println("????");
@@ -122,10 +125,15 @@ public class MainActivity2 extends AppCompatActivity implements BaseView {
                 String weather;
                 try {
 
-                    BDLocation bdLocation = mLocationClient.getLastKnownLocation();
+//                    BDLocation bdLocation = mLocationClient.getLastKnownLocation();
 //                    Log.i("ASDF", myListener.getDistrict());
-                    weather = getCityCode(bdLocation.getDistrict());
-
+                    String district = myListener.getDistrict();
+                    if(district!=null) {
+                        weather = getCityCode(district);
+                        weatherId = weather;
+                    }
+                    else
+                        weather = weatherId;
                 } catch (Exception e) {
                     weather = weatherId;
                 }
@@ -308,9 +316,32 @@ public class MainActivity2 extends AppCompatActivity implements BaseView {
         this.presenter = presenter;
     }
 
+    /***
+     * Stop location service
+     */
+    @Override
+    protected void onStop() {
+        // TODO Auto-generated method stub
+        locationService.unregisterListener(myListener); //注销掉监听
+        locationService.stop(); //停止定位服务
+        super.onStop();
+    }
+
     @Override
     protected void onStart() {
+        // TODO Auto-generated method stub
         super.onStart();
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PERMISSION_GRANTED) {// 没有权限，申请权限。
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 200);
+        }
+            // -----------location config ------------
+        locationService = new LocationService(getApplicationContext());
+        //获取locationservice实例，建议应用中只初始化1个location实例，然后使用，可以参考其他示例的activity，都是通过此种方式获取locationservice实例的
+        locationService.registerListener(myListener);
+        //注册监听
+        locationService.start();
+
     }
 
     @Override
